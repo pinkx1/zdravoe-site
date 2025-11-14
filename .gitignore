@@ -2,6 +2,8 @@
 wp-config.php
 local-xdebuginfo.php
 site-backup.tgz
+github_actions_deploy_key
+github_actions_deploy_key.pub
 
 # WordPress generated content
 wp-content/uploads/
@@ -13,4 +15,3 @@ wp-content/upgrade/
 Thumbs.db
 .vscode/
 .idea/
-
