@@ -1,0 +1,16 @@
+# Local and environment-specific config (never commit real secrets)
+wp-config.php
+local-xdebuginfo.php
+site-backup.tgz
+
+# WordPress generated content
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

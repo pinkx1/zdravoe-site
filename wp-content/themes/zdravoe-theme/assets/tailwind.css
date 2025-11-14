@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@700;900&display=swap');
+
+/* Minor custom tokens/classes used in markup */
+.serif { font-family: 'Merriweather', Georgia, serif; }
+
