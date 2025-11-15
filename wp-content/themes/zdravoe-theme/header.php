@@ -36,7 +36,7 @@
       <nav class="flex items-center gap-8">
         <a href="<?php echo esc_url(home_url('/')); ?>" class="<?php echo (is_front_page() || is_home()) ? 'px-4 py-2 rounded-full transition-all bg-[#8A6A5B] text-white hover:bg-[#7A5C4E]' : 'px-4 py-2 rounded-full transition-all text-gray-700 hover:bg-gray-100'; ?>">Главная</a>
         <a href="<?php echo esc_url(get_post_type_archive_link('book')); ?>" class="<?php echo (is_post_type_archive('book') || is_singular('book')) ? 'px-4 py-2 rounded-full transition-all bg-[#8A6A5B] text-white hover:bg-[#7A5C4E]' : 'px-4 py-2 rounded-full transition-all text-gray-700 hover:bg-gray-100'; ?>">Книги</a>
-        <a href="<?php echo esc_url(get_post_type_archive_link('article')); ?>" class="<?php echo (is_post_type_archive('article') || is_singular('article')) ? 'px-4 py-2 rounded-full transition-all bg-[#8A6A5B] text-white hover:bg-[#7A5C4E]' : 'px-4 py-2 rounded-full transition-all text-gray-700 hover:bg-gray-100'; ?>">Статьи</a>
+        <a href="<?php echo esc_url(get_post_type_archive_link('article')); ?>" class="<?php echo (is_post_type_archive('article') || is_singular('article')) ? 'px-4 py-2 rounded-full transition-all bg-[#8A6A5B] text-white hover:bg-[#7A5C4E]' : 'px-4 py-2 rounded-full transition-all text-gray-700 hover:bg-gray-100'; ?>">Тематические сборники статей</a>
       </nav>
       <button type="button" data-modal-open="contact-modal" class="bg-[#8A6A5B] text-white px-6 py-2.5 rounded-full hover:bg-[#7A5C4E] transition-colors">Связь с автором</button>
     </div>
@@ -47,7 +47,7 @@
     <div class="container mx-auto max-w-7xl px-6 pb-4 space-y-2">
       <a href="<?php echo esc_url(home_url('/')); ?>" class="block w-full text-left <?php echo (is_front_page() || is_home()) ? 'px-4 py-2 rounded-full transition-all bg-[#8A6A5B] text-white hover:bg-[#7A5C4E]' : 'px-4 py-2 rounded-full transition-all text-gray-700 hover:bg-gray-100'; ?>">Главная</a>
       <a href="<?php echo esc_url(get_post_type_archive_link('book')); ?>" class="block w-full text-left <?php echo (is_post_type_archive('book') || is_singular('book')) ? 'px-4 py-2 rounded-full transition-all bg-[#8A6A5B] text-white hover:bg-[#7A5C4E]' : 'px-4 py-2 rounded-full transition-all text-gray-700 hover:bg-gray-100'; ?>">Книги</a>
-      <a href="<?php echo esc_url(get_post_type_archive_link('article')); ?>" class="block w-full text-left <?php echo (is_post_type_archive('article') || is_singular('article')) ? 'px-4 py-2 rounded-full transition-all bg-[#8A6A5B] text-white hover:bg-[#7A5C4E]' : 'px-4 py-2 rounded-full transition-all text-gray-700 hover:bg-gray-100'; ?>">Статьи</a>
+      <a href="<?php echo esc_url(get_post_type_archive_link('article')); ?>" class="block w-full text-left <?php echo (is_post_type_archive('article') || is_singular('article')) ? 'px-4 py-2 rounded-full transition-all bg-[#8A6A5B] text-white hover:bg-[#7A5C4E]' : 'px-4 py-2 rounded-full transition-all text-gray-700 hover:bg-gray-100'; ?>">Тематические сборники статей</a>
       <button type="button" data-modal-open="contact-modal" class="w-full px-4 py-2 rounded-full bg-[#8A6A5B] text-white hover:bg-[#7A5C4E] transition-colors">Связь с автором</button>
     </div>
   </div>

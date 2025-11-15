@@ -21,7 +21,7 @@
             $chapters_data[] = [
               'id' => $id,
               'title' => $t,
-              'content_html' => wpautop(wp_kses_post(isset($ch['content']) ? $ch['content'] : '')),
+              'content_html' => preg_replace('/<img[^>]*>/i', '', wpautop(wp_kses_post(isset($ch['content']) ? $ch['content'] : ''))),
             ];
           }
         } else {
@@ -79,17 +79,6 @@
 
       <div class="grid lg:grid-cols-[350px_1fr] gap-12">
         <aside class="space-y-8 min-w-0">
-          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="aspect-[3/4] bg-gray-100">
-              <?php if (has_post_thumbnail()) {
-                the_post_thumbnail('large', ['class' => 'w-full h-full object-cover']);
-              } else {
-                $ph_file = get_template_directory() . '/assets/images/book_placeholder.webp';
-                $ph = get_template_directory_uri() . '/assets/images/book_placeholder.webp' . (file_exists($ph_file) ? ('?ver=' . filemtime($ph_file)) : '');
-                echo '<img src="' . esc_url($ph) . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-full object-cover" loading="lazy" decoding="async" />';
-              } ?>
-            </div>
-          </div>
           <div class="bg-white rounded-xl shadow-sm p-6">
             <h3 class="serif text-[1.25rem] font-[700] text-gray-900 mb-4">Оглавление</h3>
             <nav class="space-y-3" data-book-toc>
@@ -152,3 +141,4 @@
 </main>
 
 <?php get_footer(); ?>
+

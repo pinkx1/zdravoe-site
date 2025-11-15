@@ -39,7 +39,7 @@
             <?php if (has_post_thumbnail()): ?>
             <div class="rounded-xl overflow-hidden shadow-lg">
               <div class="aspect-[16/9] bg-gray-100">
-                <?php the_post_thumbnail('article_hero', ['class' => 'w-full h-full object-cover']); ?>
+                <?php // hero image removed by request ?>
               </div>
             </div>
             <?php endif; ?>
@@ -119,3 +119,4 @@
 </main>
 
 <?php get_footer(); ?>
+

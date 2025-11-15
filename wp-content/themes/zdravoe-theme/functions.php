@@ -136,7 +136,7 @@ function zdravoe_register_cpts() {
             'ep_mask' => EP_PERMALINK,
         ],
         'menu_icon' => 'dashicons-book-alt',
-        'supports' => ['title', 'thumbnail', 'excerpt'],
+        'supports' => ['title', 'excerpt'],
         'show_in_rest' => true,
     ]);
 
@@ -167,7 +167,7 @@ function zdravoe_register_cpts() {
             'ep_mask' => EP_PERMALINK,
         ],
         'menu_icon' => 'dashicons-media-text',
-        'supports' => ['title', 'editor', 'thumbnail', 'excerpt'],
+        'supports' => ['title', 'editor', 'excerpt'],
         'taxonomies' => ['article_category'],
         'show_in_rest' => true,
     ]);
@@ -229,12 +229,10 @@ add_action('wp_ajax_nopriv_zdravoe_fetch_articles', 'zdravoe_fetch_articles');
 add_action('wp_ajax_zdravoe_fetch_articles', 'zdravoe_fetch_articles');
 function zdravoe_fetch_articles() {
     $nonce_ok = (isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'zdravoe_articles_nonce'));
-    // Запрос только на чтение публичных данных — не блокируем при невалидном nonce
-    // (например, после смены домена/кэша). Просто продолжаем с безопасными ограничениями.
 
-    $ppp   = isset($_POST['ppp']) ? max(1, min(30, (int)$_POST['ppp'])) : 12;
-    $offset= isset($_POST['offset']) ? max(0, (int)$_POST['offset']) : 0;
-    $term  = isset($_POST['term']) ? sanitize_text_field((string)$_POST['term']) : 'all';
+    $ppp    = isset($_POST['ppp']) ? max(1, min(30, (int) $_POST['ppp'])) : 12;
+    $offset = isset($_POST['offset']) ? max(0, (int) $_POST['offset']) : 0;
+    $term   = isset($_POST['term']) ? sanitize_text_field((string) $_POST['term']) : 'all';
 
     $args = [
         'post_type'      => 'article',
@@ -244,7 +242,7 @@ function zdravoe_fetch_articles() {
         'no_found_rows'  => false,
     ];
     if ($term !== 'all' && $term !== '') {
-        $term_id = (int)$term;
+        $term_id = (int) $term;
         if ($term_id > 0) {
             $args['tax_query'] = [[
                 'taxonomy' => 'article_category',
@@ -258,47 +256,27 @@ function zdravoe_fetch_articles() {
     ob_start();
     $count = 0;
     if ($q->have_posts()) {
-        while ($q->have_posts()) { $q->the_post(); $count++;
+        while ($q->have_posts()) { $q->the_post(); $count++; 
             $term_ids = wp_get_object_terms(get_the_ID(), 'article_category', ['fields' => 'ids']);
             if (is_wp_error($term_ids)) { $term_ids = []; }
             $terms_attr = $term_ids ? implode(',', array_map('intval', $term_ids)) : '';
 
-            $custom = get_post_meta(get_the_ID(), 'zdravoe_article_content', true);
-            $source = $custom ? $custom : get_post_field('post_content', get_the_ID());
-            $rt = function_exists('zdravoe_reading_time') ? zdravoe_reading_time($source) : ['minutes'=>0,'words'=>0];
+            $label = '';
+            $terms = get_the_terms(get_the_ID(), 'article_category');
+            if (!is_wp_error($terms) && !empty($terms)) {
+                $label = $terms[0]->name;
+            }
             ?>
-            <a href="<?php the_permalink(); ?>" data-article-card data-terms="<?php echo esc_attr($terms_attr); ?>" class="group block bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
-              <div class="relative">
-                <div class="absolute top-3 left-3 bg-white/95 px-3 py-1 rounded-full text-[0.75rem] text-gray-700 z-10">Article</div>
-                <div class="aspect-[16/10] overflow-hidden bg-gray-100">
-                  <?php
-                    if (has_post_thumbnail()) {
-                      the_post_thumbnail('article_card', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']);
-                    } else {
-                      $ph_file = get_template_directory() . '/assets/images/article_placeholder.png';
-                      if (file_exists($ph_file)) {
-                      $ph_url = get_template_directory_uri() . '/assets/images/article_placeholder.png?ver=' . filemtime($ph_file);
-                      echo '<img src="' . esc_url($ph_url) . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />';
-                      } else {
-                        $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500"><rect width="100%" height="100%" fill="#e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-family="sans-serif" font-size="20">Нет обложки</text></svg>';
-                        $data_url = 'data:image/svg+xml;base64,' . base64_encode($svg);
-                        echo '<img src="' . $data_url . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />';
-                      }
-                    }
-                  ?>
-                </div>
-              </div>
-              <div class="p-6">
-                <h3 class="serif text-[1.25rem] font-[700] text-gray-900 mb-2 line-clamp-2"><?php the_title(); ?></h3>
-                <p class="text-gray-600 mb-4 line-clamp-2"><?php echo esc_html( get_post_meta(get_the_ID(), 'zdravoe_article_description', true) ?: get_the_excerpt() ); ?></p>
-                <div class="flex items-center gap-3 pt-4 border-t border-gray-100 text-sm text-gray-500">
-                  <?php echo get_the_date('j F Y'); ?>
-                  <span class="mx-1">·</span>
-                  <span class="inline-flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    ~<?php echo (int)$rt['minutes']; ?> мин
-                  </span>
-                </div>
+            <a href="<?php the_permalink(); ?>" data-article-card data-terms="<?php echo esc_attr($terms_attr); ?>" class="group block h-full rounded-xl border border-gray-200 bg-white/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+              <div class="flex h-full flex-col p-5 gap-3">
+                <?php if (!empty($label)) : ?>
+                  <div class="inline-flex items-center rounded-full bg-[#F4ECE6] px-3 py-1 text-[0.75rem] font-medium text-[#8A6A5B]">
+                    <?php echo esc_html($label); ?>
+                  </div>
+                <?php endif; ?>
+                <h3 class="serif text-[1.25rem] md:text-[1.375rem] font-[800] text-gray-900 leading-snug line-clamp-3">
+                  <?php the_title(); ?>
+                </h3>
               </div>
             </a>
             <?php
@@ -308,13 +286,13 @@ function zdravoe_fetch_articles() {
     $html = ob_get_clean();
     $has_more = ($q->found_posts > ($offset + $count));
     wp_send_json_success([
-        'html' => $html,
-        'count' => (int)$count,
-        'has_more' => (bool)$has_more,
+        'html'     => $html,
+        'count'    => (int) $count,
+        'has_more' => (bool) $has_more,
     ]);
 }
-
 // Если правило /books/ отсутствует (например, после смены структуры ЧПУ) — мягко перезапишем правила
+
 add_action('init', function () {
     $rules = get_option('rewrite_rules');
     if (!is_array($rules) || (!array_key_exists('books/?$', $rules) && !array_key_exists('books/([0-9]{1,})/?$', $rules))) {
@@ -669,3 +647,30 @@ add_action('do_meta_boxes', function () {
 }, 100);
 
 // Удалён AJAX для кропа изображений статей
+
+
+// === Zdravoe: hide images for articles and books ===
+add_filter('post_thumbnail_html', function ($html, $post_id, $post_thumbnail_id, $size, $attr) {
+    $type = get_post_type($post_id);
+    if (in_array($type, ['article', 'book'], true)) {
+        return ""; // no thumbnail HTML
+    }
+    return $html;
+}, 10, 5);
+
+add_filter('has_post_thumbnail', function ($has_thumbnail, $post, $thumbnail_id) {
+    $type = get_post_type($post);
+    if (in_array($type, ['article', 'book'], true)) {
+        return true; // ensure placeholder branches are not used
+    }
+    return $has_thumbnail;
+}, 10, 3);
+
+add_filter('the_content', function ($content) {
+    if (is_singular(['article', 'book'])) {
+        // strip all <img ...> tags from article/book content
+        return preg_replace('/<img[^>]*>/i', '', $content);
+    }
+    return $content;
+});
+

@@ -9,7 +9,7 @@
       <ul class="space-y-2">
         <li><a class="hover:text-gray-900" href="<?php echo esc_url(home_url('/')); ?>">Главная</a></li>
         <li><a class="hover:text-gray-900" href="<?php echo esc_url(get_post_type_archive_link('book')); ?>">Книги</a></li>
-        <li><a class="hover:text-gray-900" href="<?php echo esc_url(get_post_type_archive_link('article')); ?>">Статьи</a></li>
+        <li><a class="hover:text-gray-900" href="<?php echo esc_url(get_post_type_archive_link('article')); ?>">Тематические сборники статей</a></li>
         <?php if ($policy = get_page_by_path('privacy-policy')): ?>
           <li><a class="hover:text-gray-900" href="<?php echo esc_url(get_permalink($policy)); ?>">Политика конфиденциальности</a></li>
         <?php endif; ?>
